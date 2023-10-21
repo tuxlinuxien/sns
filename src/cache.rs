@@ -5,8 +5,6 @@ use tokio::sync::Mutex;
 use trust_dns_proto::rr::Record;
 use trust_dns_proto::rr::RecordType;
 
-const TTL_SECS: i64 = 60 * 5;
-
 struct Entry(Vec<Record>, DateTime<Utc>);
 
 #[derive(Clone)]
@@ -48,10 +46,22 @@ impl Cache {
     }
 
     pub async fn insert(&self, rt: &RecordType, domain: &str, answers: &[Record]) {
-        let expires_at = Utc::now() + chrono::Duration::seconds(TTL_SECS);
+        let ttl = answers.iter().map(|r| r.ttl()).max().unwrap_or(3600);
+        let expires_at = Utc::now() + chrono::Duration::seconds(ttl as i64);
         let entry = Entry(answers.to_vec().clone(), expires_at);
         let key = (rt.clone(), domain.to_string());
         self.db.clone().lock_owned().await.insert(key, entry);
+    }
+
+    pub fn cleanup(&self) {
+        let cache = self.clone();
+        tokio::spawn(async move {
+            loop {
+                tokio::time::sleep(std::time::Duration::from_secs(60)).await;
+                log::info!("cleaning records ...");
+                cache.clean().await;
+            }
+        });
     }
 }
 

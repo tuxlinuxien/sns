@@ -203,16 +203,6 @@ impl RequestHandler for Handler {
     }
 }
 
-fn cleanup(cache: cache::Cache) {
-    tokio::spawn(async move {
-        loop {
-            tokio::time::sleep(std::time::Duration::from_secs(60)).await;
-            log::info!("cleaning records ...");
-            cache.clean().await;
-        }
-    });
-}
-
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> anyhow::Result<()> {
     let args = Args::parse();
@@ -234,7 +224,7 @@ async fn main() -> anyhow::Result<()> {
 
     let cache = cache::new();
     // clean cached entries regularly.
-    cleanup(cache.clone());
+    cache.cleanup();
 
     let resolver = dns::new(&args.nameserver);
     let handler = Handler::new(resolver, domains, cache);
