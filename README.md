@@ -4,10 +4,6 @@
 
 -   [Black-listed Domains](https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts)
 
-## Requirements
-
--   [ip](https://linux.die.net/man/8/ip)
-
 ## Usage
 
 ```
