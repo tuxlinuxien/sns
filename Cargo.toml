@@ -1,0 +1,19 @@
+[package]
+name = "sns"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.75"
+async-trait = "0.1.73"
+chrono = "0.4.31"
+clap = { version = "4.4.6", features = ["derive", "env"] }
+env_logger = "0.10.0"
+log = "0.4.20"
+thiserror = "1.0.49"
+tokio = { version = "1.33.0", features = ["full", "tracing"] }
+trust-dns-proto = "0.23.0"
+trust-dns-resolver = "0.23.1"
+trust-dns-server = "0.23.0"

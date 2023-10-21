@@ -1,0 +1,22 @@
+[Unit]
+Description=Simple Name Server
+Wants=network-online.target
+After=network.target network-online.target
+
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10s
+ExecStart=/usr/sbin/sns \
+    --interface 127.0.0.1 \
+    --port 53 \
+    --enable-udp \
+    --nameserver 8.8.8.8 \
+    --nameserver 8.8.4.4 \
+    --ad-file /etc/sns/adslist.txt \
+    --hosts-file /etc/hosts
+
+
+[Install]
+WantedBy=multi-user.target
