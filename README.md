@@ -1,5 +1,9 @@
 # Simple Name Server
 
+## Requirements
+
+-   glibc-static
+
 ## Block lists
 
 -   [Black-listed Domains](https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts)
